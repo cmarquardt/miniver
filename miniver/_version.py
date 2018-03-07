@@ -32,21 +32,19 @@ def get_version(version_file=STATIC_VERSION_FILE):
             version = get_version_from_git_archive(version_info)
         if not version:
             version = Version("unknown", None, None)
-        return semver_format(version)
+        return pep440_format(version)
     else:
         return version
 
 
-def semver_format(version_info):
+def pep440_format(version_info):
     release, dev, labels = version_info
 
     version_parts = [release]
     if dev:
-        if release.endswith('-dev'):
+        if release.endswith('-dev') or release.endswith('.dev'):
             version_parts.append(dev)
-        elif '-' in release:
-            version_parts.append('.dev{}'.format(dev))
-        else:
+        else:  # prefer PEP440 over stric adhesion to semver
             version_parts.append('.dev{}'.format(dev))
 
     if labels:
