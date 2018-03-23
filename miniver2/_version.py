@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# This file is part of 'miniver': https://github.com/jbweston/miniver
+# This file is part of 'miniver2': https://github.com/cmarquardt/miniver2
 #
 from collections import namedtuple
 import os

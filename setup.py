@@ -21,7 +21,7 @@ def get_version_and_cmdclass(package_name):
         return module.__version__, module.cmdclass
 
 
-version, cmdclass = get_version_and_cmdclass('miniver')
+version, cmdclass = get_version_and_cmdclass('miniver2')
 
 
 setup(
@@ -41,5 +41,5 @@ setup(
     ],
     packages=find_packages('.'),
     cmdclass=cmdclass,
-    scripts=['install-miniver']
+    scripts=['install-miniver2']
 )
