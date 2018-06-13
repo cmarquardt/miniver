@@ -6,7 +6,7 @@ import os
 import subprocess
 import sys
 
-from distutils.command.build import build as build_orig
+from distutils.command.build_py import build_py as build_py_orig
 from setuptools.command.sdist import sdist as sdist_orig
 
 Version = namedtuple('Version', ('release', 'dev', 'labels'))
@@ -153,7 +153,7 @@ def _write_version(fname):
 # Python 2; and calling super() with arguments is another workaround in order
 # to support Python 2.
 
-class _build(build_orig, object):
+class _build(build_py_orig, object):
     def run(self):
         super(_build, self).run()
         _write_version(os.path.join(self.build_lib, package_name,
@@ -167,4 +167,4 @@ class _sdist(sdist_orig, object):
                                     STATIC_VERSION_FILE))
 
 
-cmdclass = dict(sdist=_sdist, build=_build)
+cmdclass = dict(sdist=_sdist, build_py=_build_py)
