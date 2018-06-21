@@ -23,10 +23,14 @@ def get_version_and_cmdclass(package_name):
 
 version, cmdclass = get_version_and_cmdclass('miniver2')
 
+with open('README.md') as readme_file:
+    long_description = readme_file.read()
 
 setup(
     name='miniver2',
     description='minimal versioning tool',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     version=version,
     url='https://github.com/cmarquardt/miniver2',
     author='Christian Marquardt (original: Joseph Weston and Christoph Groth)',
