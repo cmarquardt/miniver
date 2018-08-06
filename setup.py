@@ -5,6 +5,7 @@ import os
 import sys
 
 
+
 # Loads version.py module without importing the whole package.
 def get_version_and_cmdclass(package_name):
     try: # Python 3
