@@ -4,9 +4,8 @@
 from collections import namedtuple
 import os
 import subprocess
-import sys
 
-from distutils.command.build import build as build_orig
+from distutils.command.build_py import build_py as build_py_orig
 from setuptools.command.sdist import sdist as sdist_orig
 
 Version = namedtuple('Version', ('release', 'dev', 'labels'))
@@ -71,21 +70,35 @@ def get_version_from_git():
         return
 
     # git describe --first-parent does not take into account tags from branches
-    # that were merged-in.
+    # that were merged-in. The '--long' flag gets us the 'dev' version and
+    # git hash, '--always' returns the git hash even if there are no tags.
     for opts in [['--first-parent'], []]:
         try:
-            p = subprocess.Popen(['git', 'describe', '--long'] + opts,
-                                 cwd=distr_root,
-                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            p = subprocess.Popen(
+                ['git', 'describe', '--long', '--always'] + opts,
+                cwd=distr_root,
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except OSError:
             return
         if p.wait() == 0:
             break
     else:
         return
-    description = p.communicate()[0].decode().strip('v').rstrip('\n')
 
-    release, dev, git = description.rsplit('-', 2)
+    description = (p.communicate()[0]
+        .decode()
+        .strip('v')  # Tags can have a leading 'v', but the version should not
+        .rstrip('\n')
+        .rsplit('-', 2))  # Split the latest tag, commits since tag, and hash
+
+    try:
+        release, dev, git = description
+    except ValueError:  # No tags, only the git hash
+        # prepend 'g' to match with format returned by 'git describe'
+        git = 'g%s' % description
+        release = 'unknown'
+        dev = None
+
     labels = []
     if dev == "0":
         dev = None
@@ -95,7 +108,7 @@ def get_version_from_git():
     try:
         p = subprocess.Popen(['git', 'diff', '--quiet'], cwd=distr_root)
     except OSError:
-        labels.append('confused') # This should never happen.
+        labels.append('confused')  # This should never happen.
     else:
         if p.wait() == 1:
             labels.append('dirty')
@@ -133,6 +146,7 @@ def get_version_from_git_archive(version_info):
 
 __version__ = get_version()
 
+
 # The following section defines a module global 'cmdclass',
 # which can be used from setup.py. The 'package_name' and
 # '__version__' module globals are used (but not modified).
@@ -153,7 +167,7 @@ def _write_version(fname):
 # Python 2; and calling super() with arguments is another workaround in order
 # to support Python 2.
 
-class _build(build_orig, object):
+class _build_py(build_py_orig, object):
     def run(self):
         super(_build, self).run()
         _write_version(os.path.join(self.build_lib, package_name,
@@ -167,4 +181,4 @@ class _sdist(sdist_orig, object):
                                     STATIC_VERSION_FILE))
 
 
-cmdclass = dict(sdist=_sdist, build=_build)
+cmdclass = dict(sdist=_sdist, build_py=_build_py)

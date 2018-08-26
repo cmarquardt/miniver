@@ -36,6 +36,18 @@ curl https://raw.githubusercontent.com/cmarquardt/miniver2/master/install-minive
 ```
 This will grab the latest files from GitHub and set up Miniver2 for your project.
 
+### I get an `unknown` version!
+The version is reported as `unknown` (plus the current git hash) when there are no valid tags
+in the git history. You should create an [*annotated tag*](https://git-scm.com/book/en/v2/Git-Basics-Tagging)
+so that Miniver reports a reasonable version.
+
+If your project uses *unannotated tags* for versioning (though this is not the
+[recommended way](https://stackoverflow.com/questions/11514075/what-is-the-difference-between-an-annotated-and-unannotated-tag))
+then you'll need to run the following in order to modify Miniver2's behaviour:
+```
+curl https://raw.githubusercontent.com/cmarquardt/miniver2/master/unannotated-tags.patch | patch <your_package_directory>/_version.py
+```
+
 ### I don't want to type that URL every time I use this
 You can clone (or download a `.zip` containing) this repository and run
 `python setup.py install`, which will give you the `install-miniver` script.
