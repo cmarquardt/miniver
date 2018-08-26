@@ -78,7 +78,7 @@ def get_version_and_cmdclass(package_name):
                              os.path.join(package_name, "_version.py"))
     return module.__version__, module.cmdclass
 
-version, ver_cmdclass = get_version_and_cmdclass('mylibrary')
+version, cmdclass = get_version_and_cmdclass('mylibrary')
 
 setup(
     name = 'my_package',
