@@ -95,7 +95,7 @@ def get_version_from_git():
         release, dev, git = description
     except ValueError:  # No tags, only the git hash
         # prepend 'g' to match with format returned by 'git describe'
-        git = 'g%s' % description
+        git = 'g{}'.format(*description)
         release = 'unknown'
         dev = None
 
@@ -169,7 +169,7 @@ def _write_version(fname):
 
 class _build_py(build_py_orig, object):
     def run(self):
-        super(_build, self).run()
+        super(_build_py, self).run()
         _write_version(os.path.join(self.build_lib, package_name,
                                     STATIC_VERSION_FILE))
 
