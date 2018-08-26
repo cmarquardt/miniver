@@ -167,7 +167,7 @@ def _write_version(fname):
 # Python 2; and calling super() with arguments is another workaround in order
 # to support Python 2.
 
-class _build(build_py_orig, object):
+class _build_py(build_py_orig, object):
     def run(self):
         super(_build, self).run()
         _write_version(os.path.join(self.build_lib, package_name,
