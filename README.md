@@ -43,9 +43,9 @@ so that Miniver reports a reasonable version.
 
 If your project uses *unannotated tags* for versioning (though this is not the
 [recommended way](https://stackoverflow.com/questions/11514075/what-is-the-difference-between-an-annotated-and-unannotated-tag))
-then you'll need to run the following in order to modify Miniver's behaviour:
+then you'll need to run the following in order to modify Miniver2's behaviour:
 ```
-curl https://raw.githubusercontent.com/jbweston/miniver/master/unannotated-tags.patch | patch <your_package_directory>/_version.py
+curl https://raw.githubusercontent.com/cmarquardt/miniver2/master/unannotated-tags.patch | patch <your_package_directory>/_version.py
 ```
 
 ### I don't want to type that URL every time I use this
